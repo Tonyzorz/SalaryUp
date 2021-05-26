@@ -22,20 +22,27 @@ public class Solution {
 		// TODO Auto-generated constructor stub
 	}
 	
+	//O(n^2) 나와서 효율성 다운. 프로그래머스 통과 못함 
 	public String solution(String[] participant, String[] completion) {
         String answer = "";
+        
+        //completion 사람이 완주했느지 확인하는 array
         boolean[] check = new boolean[completion.length];
         
+        //참가자들  
         for(int i = 0; i < participant.length; i++) {
         	
         	boolean isComplete = false;
         	
+        	//완주자들
         	for(int j = 0; j < completion.length; j++) {
         		
+        		//완주자가 확인 되었으면 continue, 다음 완주자 명단 확인 
         		if(check[j]) {
         			continue;
         		}
         		
+        		//완주 == 참가자, check 명당에 true, 다음 참가자 확인
         		if(participant[i].contentEquals(completion[j])) {
         			isComplete = true;
         			check[j] = true;
@@ -43,6 +50,7 @@ public class Solution {
         		}
         	}
         	
+        	//당시이 완주자 명단에 없는 선수이군요, 당신이 답이오 
         	if(!isComplete) {
         		answer = participant[i];
         		break;
@@ -52,11 +60,16 @@ public class Solution {
         return answer;
     }
 	
+	//O(n) 효율성 통과 
 	public String solution_hashMap(String[] participant, String[] completion) {
         String answer = "";
         
+        //중복 키 방지 HashMap
         Map<String, Integer> hm = new HashMap<>();
         
+        //key = 참가자 이름 
+        //value = 참가자 수 
+        //참가자 - 완주자 = 0. 만약 for each를 둘다 돌린후에도 value값이 1이면 미완주자. 
         for(String part : participant) {
         	if(hm.get(part) == null) {
         		hm.put(part, 1);

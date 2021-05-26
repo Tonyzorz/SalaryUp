@@ -27,8 +27,8 @@ public class Solution {
 	
 	public int[] solution(int[] lottos, int[] win_nums) {
 		/*
-		 * 최대 당첨 순위 
-		 * 최소 당첨 순위 
+		 * 최대 당첨 순위  answer[0]
+		 * 최소 당첨 순위  answer[1]
 		 */
 		int[] answer = new int[2];
 		int numMatched = 0;
@@ -49,6 +49,8 @@ public class Solution {
         	}
         	
         }
+        
+        
         answer[0] = rank(numMatched + numOfZero); 
         answer[1] = rank(numMatched); 
         return answer;

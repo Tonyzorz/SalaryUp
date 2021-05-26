@@ -2,7 +2,7 @@ package programmers.level1.gymClothes;
 
 import java.util.*;
 
-public class Solution {
+public class Solution_other2 {
 
 	/*
 	 * 
@@ -19,56 +19,40 @@ public class Solution {
 		3	[3]		[1]			2
 		
 	 */
-	public Solution() {
+	public Solution_other2() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public int solution(int n, int[] lost, int[] reserve) {
-        int answer = 0;
-        int[] students = new int[n];
-        //-1 0 1 
-        //-1 no clothes
-        //0 has clothes 
-        //1 has spare clothes 
-        
-        for(int i : reserve) {
-        	students[i - 1]++;
-        }
-        
-        for(int i : lost) {
-        	students[i - 1]--;
-        }
-        
-        for(int i = 0; i < n; i++) {
-        	if(students[i] < 0) {
+    public int solution(int n, int[] lost, int[] reserve) {
+        int[] people = new int[n];
+        int answer = n;
 
-        		int previous = i - 1; 
-        		int after = i + 1;
-        		
-        		if(previous >= 0 && students[previous] > 0) {
-    				students[i]++;
-    				students[previous]--;
-    				answer++;
-    				
-        		} else if (after < n && students[after] > 0) {
-        			students[i]++;
-    				students[after]--;
-    				answer++;
-        		}
-        		
-        	} else {
-        		answer++;
-        	}
+        for (int l : lost) 
+            people[l-1]--;
+        for (int r : reserve) 
+            people[r-1]++;
+
+        for (int i = 0; i < people.length; i++) {
+            if(people[i] == -1) {
+                if(i-1>=0 && people[i-1] == 1) {
+                    people[i]++;
+                    people[i-1]--;
+                }else if(i+1< people.length && people[i+1] == 1) {
+                    people[i]++;
+                    people[i+1]--;
+                }else 
+                    answer--;
+            }
         }
-        
         return answer;
     }
+
 	
 	public static void main(String[] args) {
-		Solution solution = new Solution();
+		Solution_other2 solution = new Solution_other2();
 		
-		int[] lost = {2, 4};
-		int[] reserve = {1, 3, 5};
+		int[] lost = {3};
+		int[] reserve = {1};
 		int n = 3;
 		
 		int answer = solution.solution(n, lost, reserve);
