@@ -77,7 +77,6 @@ public class Solution {
         		int value = hm.get(part) + 1;
         		hm.put(part, value);
         	}
-        		
         }
         
         for(String comp : completion) {
@@ -88,8 +87,10 @@ public class Solution {
         for(String key : hm.keySet()) {
         	if(hm.get(key) == 1) {
         		answer = key;
+        		break;
         	}
         }
+        
         return answer;
     }
 	/*

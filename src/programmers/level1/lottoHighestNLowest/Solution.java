@@ -31,15 +31,19 @@ public class Solution {
 		 * 최소 당첨 순위  answer[1]
 		 */
 		int[] answer = new int[2];
+		// 로또 번호와 맞는 번호 수 
 		int numMatched = 0;
+		// 지워진 로또 번호 수 
         int numOfZero = 0;
         
         for(int i = 0; i < 6; i++) {
         	
+        	//로또 번호가 0이 아니면 실제 로또 번호와 비교해 같으면 맞는번호(numMatched) 증가 
         	if(lottos[i] != 0) {
         		for(int j = 0; j < lottos.length; j++) {
         			if(lottos[i] == win_nums[j]) {
         				
+        				//증가 후 for문 돌릴 필요 없으니 break; 다음 lottos 확인 
         				numMatched++;
         				break;
         			}
@@ -50,14 +54,16 @@ public class Solution {
         	
         }
         
-        
+        //최대 당첨 순위 경우는 맞는 번호 + 지워진 번호 
         answer[0] = rank(numMatched + numOfZero); 
+        //최소 당첨 순위는 맞는 번호만 
         answer[1] = rank(numMatched); 
         return answer;
     }
 	
 	public int rank(int numMatched) {
 		
+		//단순 switch case, 맞는 번호의 계수에 따라 순위 return 
 		int rank = 0;
 		switch (numMatched) {
 			case 6:
