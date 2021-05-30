@@ -46,11 +46,57 @@ public class Solution {
 	
 	public int solution(int[][] board, int[] moves) {
         int answer = 0;
+        
+        //유동적으로 삭제해야하기 때문에 list사용
+        LinkedList<Integer> list = new LinkedList<Integer>();
+        
+        //크레인 움직이는 번 수 
+        for(int i = 0; i < moves.length; i++) {
+        	//크레인으로 어디까지 내려가야하는지 검색하는 for문(column)
+        	for(int column = 0; column < board.length; column++) {
+        		//내려가면서 0이 아닐시, 인형이 있다는 뜻 
+        		if(board[column][moves[i] - 1] != 0) {
+        			//리스트에 추가, 뺀 인형은 0
+        			list.add(board[column][moves[i] - 1]);
+        			board[column][moves[i] - 1] = 0;
+        			break;
+        		}
+        	}
+        }
+        
+        
+        int i = 0;
+        //담은 인형이 1보다 작을시 바로 리턴(터질게 없음)
+        if(list.size() <= 1) {
+        	return answer;
+        }
+        
+        while(true) {
+        	//마지막 또는 다 인형이 터졌으면 끝 
+        	if(i + 1 == list.size() || list.size() == 0) break;
+        	//인형이 서로 똑같으면 
+        	if(list.get(i) == list.get(i + 1)) {
+        		//두개 다 터지고 
+        		list.remove(i + 1);
+        		list.remove(i);
+        		//처음부터 다시 검색
+        		i = 0;
+        		//인형 터진 개수 +2
+        		answer += 2;
+        	//인형이 안텨졌으니 다음 인형 검색 
+        	} else {
+        		i++;
+        	}
+        }
+        
         return answer;
     }
 	
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		
+		int[][] board ={{3,3,3,3,3},{3,3,3,3,3},{3,3,3,3,3},{3,3,3,3,3},{3,3,3,3,3}};
+		int[] moves = {1,5,3,5,1,2,1,4};
+
+		System.out.println(solution.solution(board, moves));
 	}
 }

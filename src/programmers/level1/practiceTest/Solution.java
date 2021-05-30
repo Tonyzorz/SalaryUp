@@ -41,36 +41,59 @@ public class Solution {
 	}
 	
 	public int[] solution(int[] answers) {
-        int[] answer = new int[3];
+		//반복되는 패턴 찾아서 정답을 student# 배열에 담기 
         int[] student1 = {1, 2, 3, 4, 5}; //5
         int[] student2 = {2, 1, 2, 3, 2, 4, 2, 5}; //8
         int[] student3 = {3, 3, 1, 1, 2, 2, 4, 4, 5, 5}; //10
-        int right1 = 0, right2 = 0, right3 = 0; 
-        int largest = 0;
+
+        //시험에 맞은 답의 수를 담기 
         int[] rightAns = new int[3];
         
+        //문제가 맞을때 마다 맞은 답의 수++
         for(int i = 0; i < answers.length; i++) {
-        	if(answers[i] == student1[i]) right1++;
-        	if(answers[i] == student2[i]) right2++;
-        	if(answers[i] == student3[i]) right3++;
+        	if(answers[i] == student1[i%5]) rightAns[0]++;
+        	if(answers[i] == student2[i%8]) rightAns[1]++;
+        	if(answers[i] == student3[i%10]) rightAns[2]++;
         }
         
-        if(right1 >= right2 && right1 >= right3) {
-        	largest = right1;
-        } else if(right2 >= right3) {
-        	largest = right2;
-        } else {
-        	largest = right3;
+        //최대 맞은수 찾기 
+        int maxRight = rightAns[0];
+        
+        //첫번째 학생보다 맞은 정답수 비교 후 크면 담는 for 문
+        for(int i = 1; i < rightAns.length; i++) {
+        	if(maxRight < rightAns[i]) maxRight = rightAns[i];
         }
         
-        if(largest == right1) 
+        //array는 방 크기를 고정으로 선언해야해서 list사용 
+        ArrayList<Integer> arraylist = new ArrayList<>();
+        
+        //최대 맞은수 와 같으면 list에 추가 
+        if(maxRight == rightAns[0]) arraylist.add(1);
+        if(maxRight == rightAns[1]) arraylist.add(2);
+        if(maxRight == rightAns[2]) arraylist.add(3);
+        
+        //answer 작성
+        int[] answer = new int[arraylist.size()];
+        
+        Iterator<Integer> iterator = arraylist.iterator();
+        
+        for(int i = 0; i < answer.length; i++) {
+        	answer[i] = iterator.next();
+        }
+        
+
         return answer;
     }
 	
+	/*
+	 * answers	return
+	[1,2,3,4,5]	[1]
+	[1,3,2,4,2]	[1,2,3]
+	 */
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		int[] nums = {3,1,2,3};
-		System.out.println(solution.solution(nums));
+		int[] nums = {1,2,3,4,5};
+		System.out.println(Arrays.toString(solution.solution(nums)));
 	}
 
 }
