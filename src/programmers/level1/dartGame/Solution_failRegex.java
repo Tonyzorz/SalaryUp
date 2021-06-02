@@ -2,7 +2,7 @@ package programmers.level1.dartGame;
 
 import java.util.*;
 
-public class Solution {
+public class Solution_failRegex {
 
 	/*
 	 * 
@@ -48,7 +48,7 @@ public class Solution {
 	6	1T2D3D#		-4		13 + 22 + 32 * (-1)
 	7	1D2S3T*		59		12 + 21 * 2 + 33 * 2
 	 */
-	public Solution() {
+	public Solution_failRegex() {
 		// TODO Auto-generated constructor stub
 	}
 	/**
@@ -57,42 +57,41 @@ public class Solution {
 	 */
 	public int solution(String dartResult) {
         int answer = 0;
-        int[] list = new int[3];
-        int index = 0; 
         
-        for(int i = 0; i < dartResult.length(); i++) {
+        //?<= before      ?=  after     include split character
+        String[] parts = dartResult.split("(?=[1-9]|10)");
+        //String[] parts = dartResult.split("(<=\\D[*#])");
+        int[] list = new int[parts.length];
+        //String[] parts = dartResult.split("(?<=\\d)");
+        System.out.println(Arrays.toString(parts));
+        
+        for(int i = 0; i < parts.length; i++) {
         	
-        	if(Character.isDigit(dartResult.charAt(i))) {
-        		
-        		if(dartResult.charAt(i + 1) == '0') {
-        			list[index] = 10;
-        			i++;
-        		} else {
-        			list[index] = Integer.parseInt(String.valueOf(dartResult.charAt(i)));
-        		}
-        		
-        	} else {
-        		if(dartResult.charAt(i) == 'D' || dartResult.charAt(i) == 'S' || dartResult.charAt(i) == 'T') {
-        			list[index] = (int)Math.pow(Double.valueOf(list[index]), convertPower(dartResult.charAt(i))); 
-        			index++;
-        		} else {
-        			int innerIndex = index - 1;
-        			int convert = convertSpecial(dartResult.charAt(i));
-        			if(convert == 2) {
-        				list[innerIndex] *= 2;
-        				if(innerIndex != 0) {
-        					list[innerIndex - 1] *= 2;
-        				}
-        			} else {
-        				list[innerIndex] *= -1;
-        			}
-        		}
-        	}
-        
+        	int value = 0;
+        	
+    		String[] diff = parts[i].split("(?=[A-Z])");
+    		System.out.println(Arrays.toString(diff));
+    		value = (int)Math.pow(Double.parseDouble(diff[0]), convertPower(diff[1].charAt(0))); 
+        	
+    		System.out.println("===========" + diff[1].length());
+    		if(diff[1].length() == 2) {
+    			
+    			int multipleValue = convertSpecial(diff[1].charAt(1));
+    			System.out.println("multipleValue" + multipleValue);
+    			value = value * multipleValue;
+    			
+    			if(i != 0 && multipleValue == 2) {
+    				list[i - 1] = list[i - 1] * multipleValue;
+    			}
+    		}
+    		
+    		list[i] = value;
+    		System.out.println(value);
+        	//* *2  ||| # *-1
         }
-        
-        for(int i : list) {
-        	answer += i;
+        System.out.println(Arrays.toString(list));
+        for(int i = 0; i < list.length; i++) {
+        	answer += list[i];
         }
         return answer;
     }
@@ -110,9 +109,9 @@ public class Solution {
 		else return -1;
 	}
 	public static void main(String[] args) {
-		Solution solution = new Solution();
-		//String dartResult = "1S2D*3T";
-		String dartResult = "1D2S0T";
+		Solution_failRegex solution = new Solution_failRegex();
+		String dartResult = "1D2S#10S";
+		//String dartResult = "1D2S0T";
 		
 		System.out.println(solution.solution(dartResult));
 	}
