@@ -34,32 +34,23 @@ arr	answer
 	}
 	
 	public int[] solution(int []arr) {
-        int[] answer = {};
         ArrayList<Integer> list = new ArrayList<Integer>();
-        // [실행] 버튼을 누르면 출력 값을 볼 수 있습니다.
-        //System.out.println("Hello Java");
+        list.add(arr[0]);
+        
         for(int i = 0; i < arr.length - 1; i++) {
+        	
         	if(arr[i] != arr[i + 1]) {
-        		list.add(arr[i]);
+        		
+        		list.add(arr[i+1]);
         	}
         }
-        //System.out.println(list);
-        //System.out.println(arr[arr.length - 2]);
-        //System.out.println(arr[arr.length - 1]);
-        if(list.isEmpty()) {
-        	
-        	if(arr[0] == arr[1]) list.add(arr[0]);
-        } else {
-        	
-        	if(list.get(list.size()- 1) != arr[arr.length - 1]) list.add(arr[arr.length - 1]);
-        }
-        //System.out.println(list);
+        
         return list.stream().mapToInt(Integer::intValue).toArray();
     }
 	
 	public static void main(String[] args) {
 		Solution_taewon solution = new Solution_taewon();
-		int[] arr = {1,1};
+		int[] arr = {1,1,3,3,0,1,1};
 		System.out.println(solution.solution(arr));
 	}
 }
