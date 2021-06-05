@@ -1,8 +1,8 @@
-package programmers.templates.play;
+package programmers.level1.문자열내마음대로정렬하기;
 
 import java.util.*;
 
-public class Solution_taewon_moonja {
+public class Solution_taewon_moonja_failed {
 
 	/*
 	 * 문자열 내 마음대로 정렬하기
@@ -26,7 +26,7 @@ strings	n	return
 입출력 예 2
 "abce"와 "abcd", "cdx"의 2번째 인덱스 값은 "c", "c", "x"입니다. 따라서 정렬 후에는 "cdx"가 가장 뒤에 위치합니다. "abce"와 "abcd"는 사전순으로 정렬하면 "abcd"가 우선하므로, 답은 ["abcd", "abce", "cdx"] 입니다.
 	 */
-	public Solution_taewon_moonja() {
+	public Solution_taewon_moonja_failed() {
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -70,7 +70,7 @@ strings	n	return
     }
 	
 	public static void main(String[] args) {
-		Solution_taewon_moonja solution = new Solution_taewon_moonja();
+		Solution_taewon_moonja_failed solution = new Solution_taewon_moonja_failed();
 		String[] strings = {"sun", "bed", "car"};
 		int n = 1;
 		System.out.println("a".compareTo("c"));
