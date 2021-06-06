@@ -1,4 +1,4 @@
-package programmers.templates.play;
+package programmers.level1.신규아이디;
 
 import java.util.*;
 
