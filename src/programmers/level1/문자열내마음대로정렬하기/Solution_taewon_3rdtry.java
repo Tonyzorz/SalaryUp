@@ -2,7 +2,7 @@ package programmers.level1.문자열내마음대로정렬하기;
 
 import java.util.*;
 
-public class Solution_taewon_moonja_failed {
+public class Solution_taewon_3rdtry {
 
 	/*
 	 * 문자열 내 마음대로 정렬하기
@@ -26,55 +26,36 @@ strings	n	return
 입출력 예 2
 "abce"와 "abcd", "cdx"의 2번째 인덱스 값은 "c", "c", "x"입니다. 따라서 정렬 후에는 "cdx"가 가장 뒤에 위치합니다. "abce"와 "abcd"는 사전순으로 정렬하면 "abcd"가 우선하므로, 답은 ["abcd", "abce", "cdx"] 입니다.
 	 */
-	public Solution_taewon_moonja_failed() {
+	public Solution_taewon_3rdtry() {
 		// TODO Auto-generated constructor stub
 	}
 	
 	public String[] solution(String[] strings, int n) {
-        String[] answer = new String[strings.length];
-        ArrayList<String> list = new ArrayList<>();
-        
-        for(String str : strings) {
-        	list.add(str);
-        }
-        for(int i = 0; i < list.size(); i++) {
-        	String iString = strings[i].substring(n, strings[i].length() - 1);
-        	int first = i;
-        	for(int j = i + 1; j < strings.length; j++) {
-        		String jString = strings[j].substring(n, strings[j].length() - 1);
-        		if(iString.compareTo(jString) > 0) {
-        			//front is smaller         			
-        		} else {
-        			iString = jString;
-        			first = j;
-        		}
-        	}
-        	//answer[index] = answer[i];
-        }
-        int i = 0;  int index = 0;
-        while(list.size() > 1) {
-        	String iString = strings[i].substring(n, strings[i].length() - 1);
-        	for(int j = i + 1; j < strings.length; j++) {
-        		String jString = strings[j].substring(n, strings[j].length() - 1);
-        		if(iString.compareTo(jString) > 0) {
-        			//front is smaller         			
-        		} else {
-        			iString = jString;
-        			index = j;
-        		}
-        	}
-        	//answer[index] 
-        }
-        
-        return answer;
+
+		Arrays.sort(strings, new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+
+				char c1 = o1.charAt(n);
+				char c2 = o2.charAt(n);
+				
+				if(c1 == c2) {
+					return o1.compareTo(o2);
+				} else {
+					return c1 - c2;
+				}
+			}
+			
+		});
+		//System.out.println(Arrays.toString(strings));
+        return strings;
     }
 	
 	public static void main(String[] args) {
-		Solution_taewon_moonja_failed solution = new Solution_taewon_moonja_failed();
-		String[] strings = {"sun", "bed", "car"};
-		int n = 1;
-		System.out.println("a".compareTo("c"));
-		// > 0
-		//System.out.println(solution.solution(strings, n));
+		Solution_taewon_3rdtry solution = new Solution_taewon_3rdtry();
+		String[] strings = {"abzcd","cdzab","abzfg","abzaa","abzbb","bbzaa"};
+		int n = 2;
+		System.out.println(solution.solution(strings, n));
 	}
 }
