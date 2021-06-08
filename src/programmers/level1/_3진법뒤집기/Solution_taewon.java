@@ -69,7 +69,7 @@ n (10진법)	n (3진법)	앞뒤 반전(3진법)	10진법으로 표현
     
 	public static void main(String[] args) {
 		Solution_taewon solution = new Solution_taewon();
-		int n = 45;
+		int n = 1;
 		System.out.println(solution.solution(n));
 	}
 }
