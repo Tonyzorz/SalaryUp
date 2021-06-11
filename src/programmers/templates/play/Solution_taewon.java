@@ -5,67 +5,33 @@ import java.util.*;
 public class Solution_taewon {
 
 	/*
-	 * 조이스틱
+	 * 멀쩡한 사각형
 문제 설명
-조이스틱으로 알파벳 이름을 완성하세요. 맨 처음엔 A로만 이루어져 있습니다.
-ex) 완성해야 하는 이름이 세 글자면 AAA, 네 글자면 AAAA
+가로 길이가 Wcm, 세로 길이가 Hcm인 직사각형 종이가 있습니다. 종이에는 가로, 세로 방향과 평행하게 격자 형태로 선이 그어져 있으며, 모든 격자칸은 1cm x 1cm 크기입니다. 이 종이를 격자 선을 따라 1cm × 1cm의 정사각형으로 잘라 사용할 예정이었는데, 누군가가 이 종이를 대각선 꼭지점 2개를 잇는 방향으로 잘라 놓았습니다. 그러므로 현재 직사각형 종이는 크기가 같은 직각삼각형 2개로 나누어진 상태입니다. 새로운 종이를 구할 수 없는 상태이기 때문에, 이 종이에서 원래 종이의 가로, 세로 방향과 평행하게 1cm × 1cm로 잘라 사용할 수 있는 만큼만 사용하기로 하였습니다.
+가로의 길이 W와 세로의 길이 H가 주어질 때, 사용할 수 있는 정사각형의 개수를 구하는 solution 함수를 완성해 주세요.
 
-조이스틱을 각 방향으로 움직이면 아래와 같습니다.
-
-▲ - 다음 알파벳
-▼ - 이전 알파벳 (A에서 아래쪽으로 이동하면 Z로)
-◀ - 커서를 왼쪽으로 이동 (첫 번째 위치에서 왼쪽으로 이동하면 마지막 문자에 커서)
-▶ - 커서를 오른쪽으로 이동
-예를 들어 아래의 방법으로 "JAZ"를 만들 수 있습니다.
-
-- 첫 번째 위치에서 조이스틱을 위로 9번 조작하여 J를 완성합니다.
-- 조이스틱을 왼쪽으로 1번 조작하여 커서를 마지막 문자 위치로 이동시킵니다.
-- 마지막 위치에서 조이스틱을 아래로 1번 조작하여 Z를 완성합니다.
-따라서 11번 이동시켜 "JAZ"를 만들 수 있고, 이때가 최소 이동입니다.
-만들고자 하는 이름 name이 매개변수로 주어질 때, 이름에 대해 조이스틱 조작 횟수의 최솟값을 return 하도록 solution 함수를 만드세요.
-
-제한 사항
-name은 알파벳 대문자로만 이루어져 있습니다.
-name의 길이는 1 이상 20 이하입니다.
+제한사항
+W, H : 1억 이하의 자연수
 입출력 예
-name	return
-"JEROEN"	56
-"JAN"	23
-출처
+W	H	result
+8	12	80
+입출력 예 설명
+입출력 예 #1
+가로가 8, 세로가 12인 직사각형을 대각선 방향으로 자르면 총 16개 정사각형을 사용할 수 없게 됩니다. 원래 직사각형에서는 96개의 정사각형을 만들 수 있었으므로, 96 - 16 = 80 을 반환합니다.
 
-※ 공지 - 2019년 2월 28일 테스트케이스가 추가되었습니다.
+572957326.92.png
 	 */
 	public Solution_taewon() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public int solution(String name) {
-        int answer = 0;
-        //첫번째 시작위치를 포함하지 않으니 -1
-        int lrMovement = name.length() - 1;
-        System.out.println();
-        for(int i = 0; i < name.length(); i++) {
-        	
-        	int diff = name.charAt(i) - 'A';
-        	
-        	if(diff >= 13) diff = 26 - diff;
-        	
-        	System.out.println(diff);
-        	answer += diff;
-        	
-        	if(diff == 0) {
-        		lrMovement--;
-        	}
-        }
-        
-        answer += lrMovement;
+	public long solution(int w, int h) {
+        long answer = 1;
         return answer;
     }
 	
 	public static void main(String[] args) {
 		Solution_taewon solution = new Solution_taewon();
-		String name = "JAZ";
-		//String name = "ABABAAAAAAABA";
-		System.out.println(solution.solution(name));
+		
 	}
 }
