@@ -1,4 +1,4 @@
-package programmers.templates.play;
+package programmers.level2.타켓넘버;
 
 import java.util.*;
 
