@@ -32,7 +32,7 @@ name	return
 "JEROEN"	56
 "JAN"	23
 출처
-
+z
 ※ 공지 - 2019년 2월 28일 테스트케이스가 추가되었습니다.
 	 */
 	public Solution_taewon() {
