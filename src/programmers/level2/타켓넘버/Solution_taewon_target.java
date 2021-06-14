@@ -2,7 +2,7 @@ package programmers.level2.타켓넘버;
 
 import java.util.*;
 
-public class Solution_taewon_타겟넘버 {
+public class Solution_taewon_target {
 
 	/*
 	 * 타겟 넘버
@@ -28,17 +28,34 @@ numbers				target	return
 입출력 예 설명
 문제에 나온 예와 같습니다.
 	 */
-	public Solution_taewon_타겟넘버() {
+	public Solution_taewon_target() {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public static int answers = 0;
 	public int solution(int[] numbers, int target) {
-        int answer = 0;
-        return answer;
+        dfs(numbers, target, 0, 0);
+       // System.out.println("did it work? "  + answers);
+       // System.out.println("?" + numbers.length);
+        return answers;
     }
 	
+	public void dfs(int[] numbers, int target, int index, int count) {
+		if(index == numbers.length) {
+			if(target == count) {
+				answers++;
+			}
+			return;
+		}
+		//System.out.println("index = " +index + ", count = " + count);
+		dfs(numbers, target, index + 1, count + numbers[index]);
+		dfs(numbers, target, index + 1, count + (-1 * numbers[index]));
+	}
+	
 	public static void main(String[] args) {
-		Solution_taewon_타겟넘버 solution = new Solution_taewon_타겟넘버();
-		
+		Solution_taewon_target solution = new Solution_taewon_target();
+		int[] numbers = {1,1,1,1,1};
+		int target = 3;
+		System.out.println(solution.solution(numbers, target));
 	}
 }
