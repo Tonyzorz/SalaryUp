@@ -2,7 +2,7 @@ package programmers.level2.전화번호목록;
 
 import java.util.*;
 
-public class Solution_phonebook_notfinished {
+public class Solution_taewon {
 
 	/*
 전화번호 목록
@@ -40,36 +40,12 @@ phone_book	return
 
 2021년 3월 4일, 테스트 케이스가 변경되었습니다. 이로 인해 이전에 통과하던 코드가 더 이상 통과하지 않을 수 있습니다.
 	 */
-	public Solution_phonebook_notfinished() {
+	public Solution_taewon() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	//Runtime error 
-//	public boolean solution_runtimeerror(String[] phone_book) {
-//	  boolean answer = true;
-//	  ArrayList<String> phoneBook = new ArrayList<String>();
-//	  
-//	  for(int i = 0; i < phone_book.length; i++) {
-//	  	if(phoneBook.contains(phone_book[i])) {
-//	  		System.out.println("?");
-//	  		return false;
-//	  	}
-//	  	else phoneBook.add(phone_book[i]);
-//	  }
-//	  
-//	  for(int i = 0; i < phone_book.length; i++) {
-//	  	
-//	  	for(int j = 0; j < phone_book.length; j++) {
-//	  		
-//	  		if( i != j && phoneBook.get(i).equals(phoneBook.get(j).subSequence(0, phoneBook.get(i).length()))) {
-//	  			return false;
-//	  		}
-//	  	}
-//	  }
-//	  return answer;
-//	}
-	
-	public boolean solution(String[] phone_book) {
+	//Runtime error, 효율 마지막 2개 못 끝냄 
+	public boolean solution_runtimeerror(String[] phone_book) {
         boolean answer = true;
         ArrayList<String> phoneBook = new ArrayList<String>();
 
@@ -96,18 +72,32 @@ phone_book	return
         		//System.out.println(phoneBook.get(i).substring(0, phoneBook.get(j).length()) +"   " + phoneBook.get(j));
         		if(phoneBook.get(i).substring(0, phoneBook.get(j).length()).contains(phoneBook.get(j))) {
         			answer = false;
-        			break;
+        			return answer;
         		}
         	}
         }
         
         return answer;
     }
-
+	
+	public boolean solution(String[] phone_book) {
+		Set<String> set = new HashSet<String>();
+		
+		for(String keys : phone_book) set.add(keys);
+		
+		for(String key : set) {
+			for(int i = 1; i < key.length(); i++) {
+				//System.out.println(key);
+				if(set.contains(key.substring(0, i))) return false;
+			}
+		}
+		
+		return true;
+	}
 
 
 	public static void main(String[] args) {
-		Solution_phonebook_notfinished solution = new Solution_phonebook_notfinished();
+		Solution_taewon solution = new Solution_taewon();
 		String[] phone_book = {"119", "97674223","1195524421"};
 		String[] phone_book1 = {"123","456","789"};
 		String[] phone_book2 = {"12","123","1235","567","88"};

@@ -1,8 +1,8 @@
-package programmers.templates.play;
+package programmers.level2.조이스틱;
 
 import java.util.*;
 
-public class Solution_taewon {
+public class Solution_taewon_fail {
 
 	/*
 	 * 조이스틱
@@ -35,7 +35,7 @@ name	return
 
 ※ 공지 - 2019년 2월 28일 테스트케이스가 추가되었습니다.
 	 */
-	public Solution_taewon() {
+	public Solution_taewon_fail() {
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -63,7 +63,7 @@ name	return
     }
 	
 	public static void main(String[] args) {
-		Solution_taewon solution = new Solution_taewon();
+		Solution_taewon_fail solution = new Solution_taewon_fail();
 		String name = "JAZ";
 		//String name = "ABABAAAAAAABA";
 		System.out.println(solution.solution(name));
