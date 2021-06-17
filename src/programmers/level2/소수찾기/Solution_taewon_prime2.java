@@ -1,8 +1,8 @@
-package programmers.templates.play;
+package programmers.level2.소수찾기;
 
 import java.util.*;
 
-public class Solution_taewon_prime {
+public class Solution_taewon_prime2 {
 
 	/*
 	 * 소수 찾기
@@ -28,35 +28,45 @@ numbers	return
 
 11과 011은 같은 숫자로 취급합니다.
 	 */
-	public Solution_taewon_prime() {
+	public Solution_taewon_prime2() {
 		// TODO Auto-generated constructor stub
 	}
 	
 	public int solution(String numbers) {
         int answer = 0;
-        ArrayList<Integer> nums = new ArrayList<Integer>();
-        for(int i = 0; i  < numbers.length(); i++) {
-        	nums.add(numbers.charAt(i) - '0');
-        }
-        System.out.println(nums);
         
-        Collections.reverse(nums);
-        System.out.println(nums);
+        HashSet<Integer> list = new HashSet<Integer>();
         
-        StringBuffer sb = new StringBuffer();
-        for(int i : nums) {
-        	sb.append(i);
+        for(int i = 1; i <= numbers.length(); i++) {
+        	recursive(list, "", numbers, i);
         }
-        int num = Integer.parseInt(sb.toString());
-        System.out.println(num);
+        
+        //System.out.println(list);
+
+        for(int num : list) {
+        	if(isPrime(num)) answer++;
+        }
         
         return answer;
     }
 	
+	public void recursive(HashSet<Integer> list, String prefix, String remainder, int length) {
+		
+		if(prefix.length() == length) {
+			list.add(Integer.parseInt(prefix));
+		}
+		
+		for(int i = 0; i < remainder.length(); i++) {
+			recursive(list, prefix + remainder.charAt(i), remainder.substring(0, i) + remainder.substring(i + 1, remainder.length()), length);
+		}
+	}
 	//소수 2번 시작해서 
 	//반까지 하기 
 	public boolean isPrime(int num) {
 		
+		if(num <= 1) {
+			return false;
+		}
 		for(int i = 2; i <= num/2; i++) {
 			if(num % i == 0) return false;
 		}
@@ -64,7 +74,7 @@ numbers	return
 	}
 	
 	public static void main(String[] args) {
-		Solution_taewon_prime solution = new Solution_taewon_prime();
+		Solution_taewon_prime2 solution = new Solution_taewon_prime2();
 		String numbers = "011";
 		System.out.println(solution.solution(numbers));
 	}
