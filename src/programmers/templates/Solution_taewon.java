@@ -2,17 +2,17 @@ package programmers.templates;
 
 import java.util.*;
 
-public class Solution {
+public class Solution_taewon {
 
 	/*
 	 * 
 	 */
-	public Solution() {
+	public Solution_taewon() {
 		// TODO Auto-generated constructor stub
 	}
 	
 	public static void main(String[] args) {
-		Solution solution = new Solution();
+		Solution_taewon solution = new Solution_taewon();
 		
 	}
 }

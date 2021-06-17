@@ -2,7 +2,7 @@ package programmers.templates.play;
 
 import java.util.*;
 
-public class Solution_taewon {
+public class Solution_taewon_map {
 
 	/*
 	 * 게임 맵 최단거리
@@ -54,34 +54,106 @@ maps	answer
 입출력 예 #2
 문제의 예시와 같으며, 상대 팀 진영에 도달할 방법이 없습니다. 따라서 -1을 return 합니다.
 	 */
-	public Solution_taewon() {
+	public Solution_taewon_map() {
 		// TODO Auto-generated constructor stub
 	}
 	
+	class Node{
+		int x;
+		int y;
+		
+		public Node(int x, int y) {
+			super();
+			this.x = x;
+			this.y = y;
+		}
+		public int getX() {
+			return x;
+		}
+		public void setX(int x) {
+			this.x = x;
+		}
+		public int getY() {
+			return y;
+		}
+		public void setY(int y) {
+			this.y = y;
+		}
+	}
 	public int solution(int[][] maps) {
         int answer = 0;
         
+        //prints weirdly
+        //recursive(maps, 0, 0);
+
+        Queue<Node> pq = new LinkedList<Node>();
         
-        recursive(maps);
+        pq.add(new Node(0,0));
         
-        return maps[maps.length - 1][maps[0].length - 1];
+        //n e s w
+        int[] dx = {0, 1, 0, -1};
+		int[] dy = {-1, 0, 1, 0};
+		
+        while(!pq.isEmpty()) {
+        	Node node = pq.poll();
+        	
+        	for(int i = 0; i < dx.length; i++) {
+        		int tempy = node.getY() + dy[i];
+        		int tempx = node.getX() + dx[i];
+        		
+        		if(tempx < 0 || tempx > maps[0].length -1 ||
+    					tempy < 0 || tempy > maps[0].length -1 ) {
+    				continue;
+    			}
+        		
+        		if(maps[tempy][tempx] == 0) continue;
+        		
+        		if(maps[tempy][tempx] == 1) {
+        			
+    				maps[tempy][tempx] = maps[node.getY()][node.getX()] + 1;
+        			pq.offer(new Node(tempx, tempy));
+    			}
+        	}
+        }
+        
+        
+//        for(int i = 0; i < maps.length; i++) {
+//        	System.out.println(Arrays.toString(maps[i]));
+//        }
+        return maps[maps.length - 1][maps[0].length - 1] > 1 ? maps[maps.length - 1][maps[0].length - 1] : -1;
     }
 	
-	public void recursive(int[][] maps) {
+	public void recursive(int[][] maps, int y, int x) {
 					//n e s w
 		int[] dx = {0, 1, 0, -1};
 		int[] dy = {-1, 0, 1, 0};
 		
 		
-		for(int i = 0; i < maps.length; i++) {
+		for(int i = 0; i < dx.length; i++) {
 			
+			int tempx = dx[i] + x;
+			int tempy = dy[i] + y;
+
+			if(tempx < 0 || tempx > maps[0].length -1 ||
+					tempy < 0 || tempy > maps[0].length -1 ) {
+				continue;
+			}
 			
+			if(maps[tempy][tempx] == 0) continue;
+
+			if(tempy == maps.length - 1 && tempx == maps[0].length -1) {
+				break;
+			}
+			if(maps[tempy][tempx] == 1) {
+				maps[tempy][tempx] = maps[y][x] + 1;
+				recursive(maps, tempy, tempx);
+			}
 		}
 		
 	}
 	
 	public static void main(String[] args) {
-		Solution_taewon solution = new Solution_taewon();
+		Solution_taewon_map solution = new Solution_taewon_map();
 		int[][] maps = {{1,0,1,1,1},
 						{1,0,1,0,1},
 						{1,0,1,1,1},
