@@ -1,4 +1,4 @@
-package programmers.templates.play;
+package programmers.level2.게임맵최단거리;
 
 import java.util.*;
 
@@ -80,12 +80,12 @@ maps	answer
 			this.y = y;
 		}
 	}
+	
 	public int solution(int[][] maps) {
         int answer = 0;
         
         //prints weirdly
-        //recursive(maps, 0, 0);
-
+      // recursive(maps, 0, 0);
         Queue<Node> pq = new LinkedList<Node>();
         
         pq.add(new Node(0,0));
@@ -93,7 +93,6 @@ maps	answer
         //n e s w
         int[] dx = {0, 1, 0, -1};
 		int[] dy = {-1, 0, 1, 0};
-		
         while(!pq.isEmpty()) {
         	Node node = pq.poll();
         	
@@ -101,15 +100,15 @@ maps	answer
         		int tempy = node.getY() + dy[i];
         		int tempx = node.getX() + dx[i];
         		
-        		if(tempx < 0 || tempx > maps[0].length -1 ||
-    					tempy < 0 || tempy > maps[0].length -1 ) {
+        		if(tempx < 0 || tempx >= maps[0].length ||
+    					tempy < 0 || tempy >= maps.length ) {
     				continue;
     			}
         		
         		if(maps[tempy][tempx] == 0) continue;
         		
         		if(maps[tempy][tempx] == 1) {
-        			
+        			//System.out.println("??????????");
     				maps[tempy][tempx] = maps[node.getY()][node.getX()] + 1;
         			pq.offer(new Node(tempx, tempy));
     			}
@@ -117,9 +116,9 @@ maps	answer
         }
         
         
-//        for(int i = 0; i < maps.length; i++) {
-//        	System.out.println(Arrays.toString(maps[i]));
-//        }
+        for(int i = 0; i < maps.length; i++) {
+        	System.out.println(Arrays.toString(maps[i]));
+        }
         return maps[maps.length - 1][maps[0].length - 1] > 1 ? maps[maps.length - 1][maps[0].length - 1] : -1;
     }
 	
@@ -127,7 +126,7 @@ maps	answer
 					//n e s w
 		int[] dx = {0, 1, 0, -1};
 		int[] dy = {-1, 0, 1, 0};
-		
+		boolean[][] visited = new boolean[maps.length][maps[0].length];
 		
 		for(int i = 0; i < dx.length; i++) {
 			
@@ -140,11 +139,12 @@ maps	answer
 			}
 			
 			if(maps[tempy][tempx] == 0) continue;
+			if(visited[tempy][tempx] == true) continue;
 
-			if(tempy == maps.length - 1 && tempx == maps[0].length -1) {
-				break;
-			}
+			
 			if(maps[tempy][tempx] == 1) {
+				//System.out.println("??????????");
+				visited[tempy][tempx] = true;
 				maps[tempy][tempx] = maps[y][x] + 1;
 				recursive(maps, tempy, tempx);
 			}
@@ -159,6 +159,7 @@ maps	answer
 						{1,0,1,1,1},
 						{1,1,1,0,1},
 						{0,0,0,0,1},};
+//		int[][] maps = {{1,0,1,1,1},{1,0,1,0,1},{1,0,1,1,1},{1,1,1,0,0},{0,0,0,0,1}};	
 		System.out.println(solution.solution(maps));
 	}
 }
