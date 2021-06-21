@@ -1,4 +1,4 @@
-package programmers.templates.play;
+package programmers.playground;
 
 import java.util.*;
 
