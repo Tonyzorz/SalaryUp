@@ -1,4 +1,4 @@
-package templates.chocolate;
+package interview.chocolateEnt;
 
 import java.util.*;
 
