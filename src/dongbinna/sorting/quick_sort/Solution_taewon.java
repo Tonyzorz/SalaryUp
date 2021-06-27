@@ -20,9 +20,13 @@ public class Solution_taewon {
 		
 		while(left <= right) {
 			
+			//find number greater than pivot
 			while(left <= end && arr[left] <= arr[pivot]) left++;
+			
+			//find number less than pivot
 			while(right > start && arr[right] >= arr[pivot]) right--;
 			
+			//keep swapping until all numbers have been swapped 
 			if(left > right) {
 				int temp = arr[pivot];
 				arr[pivot] = arr[right];
