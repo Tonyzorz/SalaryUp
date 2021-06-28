@@ -41,48 +41,92 @@ N	road	K	result
 		// TODO Auto-generated constructor stub
 	}
 	
+	class Node {
+		
+		private int index;
+		private int distance;
+
+		public Node(int index, int distance) {
+			super();
+			this.index = index;
+			this.distance = distance;
+		}
+		public int getIndex() {
+			return index;
+		}
+		public void setIndex(int index) {
+			this.index = index;
+		}
+		public int getDistance() {
+			return distance;
+		}
+		public void setDistance(int distance) {
+			this.distance = distance;
+		}
+		
+	}
+	
 	public static boolean[] visited;
 	public static int[] d;
 	public static int[][] roads;
+	public static ArrayList<ArrayList<Node>> graph = new ArrayList<ArrayList<Node>>();
 	
     public int solution(int N, int[][] road, int K) {
         int answer = 0;
-        roads = road;
+        
+        for(int i = 0; i < road.length ; i++) {
+        	graph.add(new ArrayList<Node>());
+        }
+        for(int i = 0; i < road.length; i++) {
+        	graph.get(road[i][0]).add(new Node(road[i][1], road[i][2]));
+        	graph.get(road[i][1]).add(new Node(road[i][0], road[i][2]));
+        }
+        
+        
+        //{{1,2,1},{2,3,3},{5,2,2},{1,4,2},{5,3,1},{5,4,2}};
+        //roads = road;
         visited = new boolean[N + 1];
         d = new int[N + 1];
         Arrays.fill(d, Integer.MAX_VALUE);
         
-        answer = dijkstra(1, K);
+        dijkstra(1, K);
+        
+        for(int i = 1; i < d.length; i++) {
+        	if(d[i] <= K) answer++;
+        }
         return answer;
     }
 	
-    public static int dijkstra(int start, int possibleRoadLength) {
-    	int answer = 0;
+    public static void dijkstra(int start, int possibleRoadLength) {
     	
     	visited[start] = true;
     	d[start] = 0;
     	
-    	for(int i = 0; i < roads.length; i++) {
-    		if(roads[i][0] == start) {
-    			d[roads[i][1]] = roads[i][2];
+    	for(int i = 0; i < graph.get(start).size(); i++) {
+    		d[graph.get(start).get(i).getIndex()] = graph.get(start).get(i).getDistance();
+    	}
+    	
+    	//System.out.println(Arrays.toString(d));
+    	for(int i = 0; i < graph.size(); i++) {
+    		int now = getSmallestNode();
+    		visited[now] = true;
+    		//System.out.println(now);
+    		//System.out.println(Arrays.toString(d));
+    		//for(int j = )
+    		for(int j = 0; j < graph.get(now).size(); j++) {
+    			int cost = d[now] + graph.get(now).get(j).getDistance();
+    			if(cost < d[graph.get(now).get(j).getIndex()]) {
+    				d[graph.get(now).get(j).getIndex()] = cost;
+    			}
     		}
     	}
     	
-    	for(int i = 0; i < roads.length; i++) {
-    		int now = getSmallestNode();
-    		visited[now] = true;
-    		
-    		//for(int j = )
-    	}
-    	
-    	return answer;
     }
     
     public static int getSmallestNode() {
     	int index = 0;
     	int smallest = Integer.MAX_VALUE;
-    	
-    	for(int i = 1; i <= roads.length; i++) {
+    	for(int i = 1; i < graph.size(); i++) {
     		if(d[i] < smallest && !visited[i]) {
     			smallest = d[i];
     			index = i;
