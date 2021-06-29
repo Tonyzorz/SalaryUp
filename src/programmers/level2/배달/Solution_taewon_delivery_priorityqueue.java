@@ -1,8 +1,36 @@
-package programmers.playground;
+package programmers.level2.배달;
 
 import java.util.*;
 
-public class Solution_taewon_delivery {
+class Node implements Comparable<Node>{
+	
+	private int index;
+	private int distance;
+
+	public Node(int index, int distance) {
+		this.index = index;
+		this.distance = distance;
+	}
+	public int getIndex() {
+		return index;
+	}
+
+	public int getDistance() {
+		return distance;
+	}
+
+	@Override
+	public int compareTo(Node other) {
+		
+		if(this.distance < other.distance) {
+			return -1;
+		}
+		// TODO Auto-generated method stub
+		return 1;
+	}
+	
+}
+public class Solution_taewon_delivery_priorityqueue {
 
 	/*
 	 *문제 설명
@@ -45,109 +73,90 @@ N	road	K	result
 배달_3_njc7kq.png
 1번 마을에서 배달에 4시간 이하가 걸리는 마을은 [1, 2, 3, 5] 4개이므로 4를 return 합니다.
 	 */
-	public Solution_taewon_delivery() { 
+	public Solution_taewon_delivery_priorityqueue() { 
 		// TODO Auto-generated constructor stub
 	}
 	
-	class Node {
-		
-		private int index;
-		private int distance;
 
-		public Node(int index, int distance) {
-			super();
-			this.index = index;
-			this.distance = distance;
-		}
-		public int getIndex() {
-			return index;
-		}
-		public void setIndex(int index) {
-			this.index = index;
-		}
-		public int getDistance() {
-			return distance;
-		}
-		public void setDistance(int distance) {
-			this.distance = distance;
-		}
-		
-	}
 	
-	public static boolean[] visited;
-	public static int[] d;
-	public static int[][] roads;
-	public static ArrayList<ArrayList<Node>> graph = new ArrayList<ArrayList<Node>>();
+	private static int INF = (int) 1e9;
+	static ArrayList<ArrayList<Node>> graph = new ArrayList<>();
+	static int d[];
+	
 	
     public int solution(int N, int[][] road, int K) {
         int answer = 0;
+        d = new int[N + 1];
+        Arrays.fill(d, INF);
         
-        for(int i = 0; i <= N ; i++) {
-        	graph.add(new ArrayList<Node>());
+        for(int i = 0; i <= N; i++) {
+        	graph.add(new ArrayList<>());
         }
+        
+        //{{1,2,1},{2,3,3},{5,2,2},{1,4,2},{5,3,1},{5,4,2}};
+        
+//        for(int j = 0; j < road.length; j++) {
+//        	
+//        	for(int i = 0; i < 2; i++) {
+//        		int index = road[j][i];
+//        		graph.get(j + 1).add(new Node(index, road[j][2]));
+//        	}
+//        }
         for(int i = 0; i < road.length; i++) {
         	graph.get(road[i][0]).add(new Node(road[i][1], road[i][2]));
         	graph.get(road[i][1]).add(new Node(road[i][0], road[i][2]));
         }
         
+//        for(int[] street : road) {
+//        	int nodeA = street[0];
+//        	int nodeB = street[1];
+//        	int dist = street[2];
+//        	graph.get(nodeA).add(new Node(nodeB, dist));
+//        	graph.get(nodeB).add(new Node(nodeA, dist));
+//        }
         
-        //{{1,2,1},{2,3,3},{5,2,2},{1,4,2},{5,3,1},{5,4,2}};
-        //roads = road;
-        visited = new boolean[51];
-        d = new int[51];
-        Arrays.fill(d, Integer.MAX_VALUE);
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        pq.add(new Node(1, 0));
+        d[1] = 0;
         
-        dijkstra(1, K);
+        while(!pq.isEmpty()) {
+        	Node node = pq.poll();
+        	int dist = node.getDistance();
+        	int now = node.getIndex();
+        	
+        	if(d[now] < dist) continue;
+        	
+        	for(int i = 0; i < graph.get(now).size(); i++) {
+        		int cost = dist + graph.get(now).get(i).getDistance();
+        		if(cost < d[graph.get(now).get(i).getIndex()]) {
+        			d[graph.get(now).get(i).getIndex()] = cost;
+        			pq.add(new Node(graph.get(now).get(i).getIndex(), cost));
+        		}
+        	}
+        	
+//        	ArrayList<Node> nodes = graph.get(now);
+//        	
+//        	for(Node next : nodes) {
+//        		int cost = next.getDistance() + dist;
+//        		if(cost < d[next.getIndex()]) {
+//        			d[next.getIndex()] = cost;
+//        			pq.offer(new Node(next.getIndex(), cost));
+//        		}
+//        	}
+        }
         
-        for(int i = 1; i < d.length; i++) {
+        for(int i = 1; i <= N; i++) {
         	if(d[i] <= K) answer++;
         }
+        
+        //System.out.println(Arrays.toString(d));
         return answer;
     }
-	
-    public static void dijkstra(int start, int possibleRoadLength) {
-    	
-    	visited[start] = true;
-    	d[start] = 0;
-    	
-    	for(int i = 0; i < graph.get(start).size(); i++) {
-    		d[graph.get(start).get(i).getIndex()] = graph.get(start).get(i).getDistance();
-    	}
-    	
-    	//{{1,2,1},{2,3,3},{5,2,2},{1,4,2},{5,3,1},{5,4,2}};
-    	//System.out.println("first start = " + Arrays.toString(d));
-    	for(int i = 0; i < graph.size(); i++) {
-    		int now = getSmallestNode();
-    		visited[now] = true;
-    		//System.out.println(now);
-    		//System.out.println(now + " now = " + Arrays.toString(d));
-    		//for(int j = )
-    		for(int j = 0; j < graph.get(now).size(); j++) {
-    			int cost = d[now] + graph.get(now).get(j).getDistance();
-    			if(cost < d[graph.get(now).get(j).getIndex()]) {
-    				d[graph.get(now).get(j).getIndex()] = cost;
-    			}
-    		}
-    	}
-    	
-    }
     
-    public static int getSmallestNode() {
-    	int index = 0;
-    	int smallest = Integer.MAX_VALUE;
-    	for(int i = 1; i < graph.size(); i++) {
-    		if(d[i] < smallest && !visited[i]) {
-    			smallest = d[i];
-    			index = i;
-    		}
-    	}
-    	
-    	return index;
-    }
 	public static void main(String[] args) {
-		Solution_taewon_delivery solution = new Solution_taewon_delivery();
+		Solution_taewon_delivery_priorityqueue solution = new Solution_taewon_delivery_priorityqueue();
 		int N = 5;
-		int[][] road = {{1,2,2000},{2,3,3},{5,2,2},{1,4,2},{5,3,1},{5,4,2}};
+		int[][] road = {{1,2,1},{2,3,3},{5,2,2},{1,4,2},{5,3,1},{5,4,2}};
 		int K = 3;
 		System.out.println(solution.solution(N, road, K));
 	}
