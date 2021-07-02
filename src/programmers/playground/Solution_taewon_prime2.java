@@ -1,4 +1,4 @@
-package programmers.level2.소수찾기;
+package programmers.playground;
 
 import java.util.*;
 
@@ -60,6 +60,7 @@ numbers	return
 			recursive(list, prefix + remainder.charAt(i), remainder.substring(0, i) + remainder.substring(i + 1, remainder.length()), length);
 		}
 	}
+	
 	//소수 2번 시작해서 
 	//반까지 하기 
 	public boolean isPrime(int num) {
