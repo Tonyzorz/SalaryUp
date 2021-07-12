@@ -1,13 +1,13 @@
-package templates;
+package interview.kingyibeo_2021_07;
 
 import java.util.*;
 
-public class Solution_taewon_kinyibeo2 {
+public class Solution_taewon_kinyibeo2_cook {
 
 	/*
 	 * 
 	 */
-	public Solution_taewon_kinyibeo2() {
+	public Solution_taewon_kinyibeo2_cook() {
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -40,7 +40,7 @@ public class Solution_taewon_kinyibeo2 {
 	}
 	
 	public static void main(String[] args) {
-		Solution_taewon_kinyibeo2 solution = new Solution_taewon_kinyibeo2();
+		Solution_taewon_kinyibeo2_cook solution = new Solution_taewon_kinyibeo2_cook();
 
 	}
 }
