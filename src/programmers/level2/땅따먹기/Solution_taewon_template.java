@@ -1,4 +1,4 @@
-package programmers.playground;
+package programmers.level2.땅따먹기;
 
 import java.util.*;
 
@@ -66,9 +66,27 @@ public class Solution_taewon_template {
         return answer;
     }
     
+    int solution_dp(int[][] land) {
+    	
+    	for (int i = 1; i < land.length; i++) {
+    		land[i][0] += Math.max(land[i - 1][1], Math.max(land[i - 1][2], land[i - 1][3]));
+    		land[i][1] += Math.max(land[i - 1][0], Math.max(land[i - 1][2], land[i - 1][3]));
+    		land[i][2] += Math.max(land[i - 1][1], Math.max(land[i - 1][0], land[i - 1][3]));
+    		land[i][3] += Math.max(land[i - 1][1], Math.max(land[i - 1][2], land[i - 1][0]));
+    	}
+    	
+    	int[] partialLand = land[land.length - 1];
+    	Arrays.sort(partialLand);
+    	
+        return partialLand[partialLand.length - 1];
+    }
+    
+    /*				열 column 
+     * 행 rows
+     */
 	public static void main(String[] args) {
 		Solution_taewon_template solution = new Solution_taewon_template();
-		int[][] land = {{4, 3, 2, 1}, {2, 2, 2, 1}, {6, 6, 6, 4}, {8, 7, 6, 5}};
-		System.out.println(solution.solution(land));
+		int[][] land = {{1,2,3,5},{5,6,7,8},{4,3,2,1}};
+		System.out.println(solution.solution_dp(land));
 	}
 }
