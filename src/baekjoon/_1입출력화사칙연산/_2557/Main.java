@@ -1,4 +1,4 @@
-package baekjoon._1_입출력화사칙연산._2557;
+package baekjoon._1입출력화사칙연산._2557;
 
 import java.util.*;
 
