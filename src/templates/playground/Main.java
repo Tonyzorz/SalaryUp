@@ -1,4 +1,4 @@
-package baekjoon;
+package templates.playground;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,20 +13,7 @@ public class Main {
     	BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     	Scanner sc = new Scanner(System.in);
 
-    	boolean[] check = new boolean[26];
-    	
-    	int num = sc.nextInt();
-    	
-    	for (int i = 0; i < num; i++) {
-    		
-    		String word = sc.nextLine();
-    		
-    		for (int j = 1; j < word.length(); j++) {
-    			
-    		}
-    		
-    		
-    	}
+    
     }
     
 }
