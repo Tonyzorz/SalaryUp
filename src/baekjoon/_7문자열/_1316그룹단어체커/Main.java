@@ -1,4 +1,4 @@
-package baekjoon;
+package baekjoon._7문자열._1316그룹단어체커;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,6 +13,7 @@ public class Main {
     	BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     	Scanner sc = new Scanner(System.in);
 
+    
     }
     
 }
