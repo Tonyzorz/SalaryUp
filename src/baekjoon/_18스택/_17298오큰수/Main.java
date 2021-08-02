@@ -40,56 +40,36 @@ public class Main {
     public static void main (String[] args) throws NumberFormatException, IOException{
     	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     	BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-    	Scanner sc = new Scanner(System.in);
 
     	int size = Integer.parseInt(br.readLine());
     	
     	int[] numbers = new int[size];
-    	Stack<Integer> stack = new Stack<Integer>();
-    	Stack<Integer> results = new Stack<Integer>();
-    	
     	String[] numStrs = br.readLine().split(" ");
+    	Stack<Integer> stack = new Stack<Integer>();
     	
     	for (int i = 0; i < size; i++) {
     		numbers[i] = Integer.parseInt(numStrs[i]);
-    		stack.add(Integer.parseInt(numStrs[i]));
     	}
     	
-    	int biggest = 0;
-    	int previous = 0;
-    	int temp = 0;
-    	while(!stack.isEmpty()) {
+    	
+    	for (int i = 0; i < size; i++) {
+    	
+			while (!stack.isEmpty() && numbers[i] > numbers[stack.peek()]) {
+				numbers[stack.pop()] = numbers[i];
+			}
     		
-    		if (biggest == 0) {
-    			biggest = stack.pop();
-    			results.add(-1);
-    			continue;
-    		}
+			stack.push(i);
+    	}
+    	
+    	while (!stack.isEmpty()) {
+    		numbers[stack.pop()] = -1;
+    	}
 
-    		if (stack.peek() < biggest) {
-    			previous = stack.pop();
-    			
-    			if (!stack.isEmpty() && previous < temp) {
-    				results.add(temp);
-    				
-    			} else {
-    				results.add(biggest);
-    				
-    			}
-    			
-    			temp = previous;
-    			continue;
-    		} else {
-    			stack.pop();
-    			results.add(-1);
-    		}
-    		
+    	for (int num : numbers) {
+    		bw.write(num+" ");
     	}
     	
-    	while(!results.isEmpty()) {
-    		System.out.print(results.pop() + " ");
-    	}
-    	
+    	bw.flush();
     	
     }
     
