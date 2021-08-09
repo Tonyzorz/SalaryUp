@@ -21,6 +21,9 @@ https://www.acmicpc.net/step
 		BFS(너비우선탐색)
 		
 		 
+	- 9663 n-queen 
+		이론은 이해했으나 코드가 이해가 잘안됨 
+		제출 안함 
 		
 	
 	
