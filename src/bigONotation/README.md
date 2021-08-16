@@ -4,14 +4,14 @@ https://www.youtube.com/watch?v=Mo4vesaut8g&ab_channel=freeCodeCamp.org
 
 
 what is big o notation 
-- used to measure efficence while it reaches infinity
+- used to measure efficiency while it reaches infinity
 
 ex. # of patients * 30 
 	which means linear 
 	which is Big O(n) 
 	n means = # of patients 
 	
-when considering efficency of a function, a constant time is ignored 
+when considering efficiency of a function, a constant time is ignored 
 
 So then what is considered to be constant? 
 	- constant is any function that does not scale with given input 
@@ -114,10 +114,105 @@ Binary Search & O(log n)
 		Since it divides by half continuously, it is log n 
 		
 					
+
+O(n log n) & Merge Sort 
+===================================					
 					
+	function nLogNFunction(n) {
+	
+		let y = n;
+		while (n > 1) {
+		
+			n = Math.floor(n / 2);
+			for (let i = 1; i <= y; i++) {
+				console.log(i);
+			}
+		}
+	}				
 					
-					
-					
+	Merge sort complexity deep dive 
+	
+
+Fibonacci & Exponential Complexity   O(2^n)
+===================================					
+
+	function fib(n) {
+	
+		if (n == 0) {
+			return 0;
+		}
+		
+		if (n == 1) {
+			return 1;
+		}
+		
+		return fib(n - 1) + fib(n - 2);
+	}
+
+
+factorial                  f(n!)
+===================================					
+
+	function f(n) {
+		 if (n == 0) {
+		 	console.log("************");
+		 	return;
+		 }
+		 
+		 for (int i = 0; i < n; i++) {
+		 	f(n - 1);
+		 }
+	}
+
+
+
+Space complexity 
+===================================					
+
+function countDown(n) {	//  O(n)
+	if (n == 0) {
+		return;
+	}
+	
+	return countDown(n - 1); 
+}
+
+function twoLoops(a) {
+									//it is O(2n) == O(n)
+	for (int i = 0; i < a; i+=) {
+		//do something 
+	}
+	
+	for (int i = 0; i < a; i+=) {
+		//do something 
+	}
+}
+
+
+function twoInputsAdd(a, b) {         //is not O(2n)
+									  //it is O(a + b)
+	for (int i = 0; i < a; i++) {     //because it is a seperate input
+		// do something 
+	}
+	
+	for (int i = 0; i < b; i++) {
+		// do something 
+	}
+}
+
+function twoInputsMul(a, b) {		//it is not O(n^2)
+									//it is O(a * b)
+	for (int i = 0; i < a; i++) {
+		
+		for (int i = 0; i < b; i++) {
+		
+		}
+	}
+}
+
+
+
+
 					
 					
 						  
