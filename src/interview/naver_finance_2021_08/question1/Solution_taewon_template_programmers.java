@@ -63,15 +63,43 @@ public class Solution_taewon_template_programmers {
 		// TODO Auto-generated constructor stub
 	}
 	
+//	 * A[0] = 4
+//	 * A[1] = 6
+//	 * A[2] = 2
+//	 * A[3] = 2
+//	 * A[4] = 6
+//	 * A[5] = 6
+//	 * A[6] = 1
 	public int solution(int[] A) {
 		
+		int max = 0;
+		HashMap<Integer, Integer> compare = new HashMap<Integer, Integer>(); 
 		
-		return 0;
+		//lets aim for O(n)
+		for (int i = 0; i < A.length; i++) {
+			
+			//i = current A place 
+			int value = A[i];
+			
+			if (compare.containsKey(value)) {
+				int previousIndex = compare.get(value);
+				int diff = Math.abs(previousIndex - i);
+				if (max < diff) {
+					max = diff;
+				}
+			} else {
+				compare.put(value, i);
+			}
+			
+		}
+		
+		return max;
 	}
 	
 	public static void main(String[] args) {
 		Solution_taewon_template_programmers solution = new Solution_taewon_template_programmers();
-		int[] A = {4, 6, 2, 2, 6, 6, 1};
+		//int[] A = {4, 6, 2, 2, 6, 6, 1};
+		int[] A = {50000, 50000, 50000, 50000, 6, 6, 50000};
 		
 		System.out.println(solution.solution(A));
 	}
