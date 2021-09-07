@@ -2,6 +2,7 @@ package baekjoon._13백트래킹._2580스도쿠;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.*;
@@ -11,9 +12,9 @@ public class Main {
 	/*
 	 * https://www.acmicpc.net/problem/2580
 	 * 
-	 * 스도쿠 스페셜 저지출처
+	 * 스도쿠 성공스페셜 저지출처
 		시간 제한	메모리 제한	제출	정답	맞은 사람	정답 비율
-		1 초	256 MB	47338	14077	8868	28.143%
+		1 초	256 MB	49073	14586	9178	28.073%
 		문제
 		스도쿠는 18세기 스위스 수학자가 만든 '라틴 사각형'이랑 퍼즐에서 유래한 것으로 현재 많은 인기를 누리고 있다. 이 게임은 아래 그림과 같이 가로, 세로 각각 9개씩 총 81개의 작은 칸으로 이루어진 정사각형 판 위에서 이뤄지는데, 게임 시작 전 일부 칸에는 1부터 9까지의 숫자 중 하나가 쓰여 있다.
 		
@@ -71,105 +72,80 @@ public class Main {
 		6 4 3 7 8 1 9 5 2
 		2 5 8 3 9 4 7 6 1
 	 */
-    public static void main (String[] args){
-    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    	BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	public static int[][] sudoku = new int[9][9];
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+	public static void main (String[] args) throws IOException{
     	Scanner sc = new Scanner(System.in);
 
-    	for (int i = 0; i < 9; i++) {
+    	for (int i = 0; i < sudoku.length; i++) {
     		
-    		String[] str = sc.nextLine().split(" ");
-    		
-    		for (int j = 0; j < str.length; j++) {
-    			arr[i][j] = Integer.parseInt(str[j]);
-    		}
-    		
-    	}
-
-    	sudoku(0, 0);
-/*    	for (int i = 0; i < 9; i++) {
-    		for (int j = 0; j < 9; j++) {
-    			
-    			if (arr[i][j] == 0) {
-    				for (int z = 1; z <= 9; z++) {
-    					
-    					if (possibility(i, j, z)) {
-    						arr[i][j] = z;
-    						break;
-    					}
-    				}
-    			}
+    		String[] nums = sc.nextLine().split(" ");
+    		for (int j = 0; j < sudoku[0].length; j++) {
+    			sudoku[i][j] = Integer.parseInt(nums[j]);
     		}
     	}
     	
-    	StringBuilder sb = new StringBuilder();
-    	for (int i = 0; i < 9; i++) {
-    		for (int j = 0; j < 9; j++) {
-    			sb.append(arr[i][j]).append(' ');
-    		}
-    		sb.append('\n');
-    	}
-    	System.out.print(sb);*/
+    	recursive(0, 0);
     }
     
-    public static int[][] arr = new int[9][9];
-    
-    public static void sudoku(int row, int col) {
+    public static void recursive(int row, int col) throws IOException {
     	
     	if (col == 9) {
-    		sudoku(row + 1, 0);
+    		recursive(row + 1, 0);
     		return;
     	}
     	
+    	//print
     	if (row == 9) {
-    		//출력 
-    		StringBuilder sb = new StringBuilder();
-        	for (int i = 0; i < 9; i++) {
-        		for (int j = 0; j < 9; j++) {
-        			sb.append(arr[i][j]).append(' ');
+    		for (int i = 0; i < sudoku.length; i++) {
+        		for (int j = 0; j < sudoku[0].length; j++) {
+        			bw.write(String.valueOf(sudoku[i][j]) + " ");
         		}
-        		sb.append('\n');
+        		bw.write("\n");
         	}
-        	System.out.print(sb);
-        	System.exit(0);
+    		bw.flush();
+        	bw.close();
+    		System.exit(0);
     	}
     	
-    	if (arr[row][col] == 0) {
-    		
-    		for (int i = 1; i <= 9; i++) {
-    			if (possibility(row, col, i)) {
-    				arr[row][col] = i;
-    				sudoku(row, col + 1);
-    			}
-    		}
-    		arr[row][col] = 0;
-    		return;
+    	if (sudoku[row][col] == 0) {
+        	for (int i = 1; i <= 9; i++) {
+				if (possibility(row, col, i)) {
+					sudoku[row][col] = i;
+					recursive(row, col + 1);
+				}
+        	}
+        	sudoku[row][col] = 0;
+        	return;
     	}
     	
-    	sudoku(row, col + 1);
+    	recursive(row, col + 1);
     	
     }
     
     public static boolean possibility(int row, int col, int value) {
     	
+    	//check current row 
     	for (int i = 0; i < 9; i++) {
-    		if (arr[row][i] == value) {
+    		if (sudoku[row][i] == value) {
     			return false;
     		}
     	}
     	
+    	//check current col
     	for (int i = 0; i < 9; i++) {
-    		if (arr[i][col] == value) {
+    		if (sudoku[i][col] == value) {
     			return false;
     		}
     	}
     	
-    	int set_row = (row / 3) * 3;
-    	int set_col = (col / 3) * 3;
-    	
-    	for (int i = set_row; i < set_row + 3; i++) {
-    		for (int j = set_col; j < set_col + 3; j++) {
-    			if (arr[i][j] == value) {
+    	//check square
+    	for (int i = row/3 * 3; i < row/3 * 3 + 3; i++) {
+    		for (int j = col/3 * 3; j < col/3 * 3 + 3; j++) {
+    			if (sudoku[i][j] == value) {
     				return false;
     			}
     		}
@@ -177,4 +153,5 @@ public class Main {
     	
     	return true;
     }
+    
 }
