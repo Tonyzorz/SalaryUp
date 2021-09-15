@@ -77,13 +77,152 @@ records 배열의 모든 원소가 재구매율을 계산하고자 하는 기간
 	
 	public String[] solution(String[] records, int k, String date) {
 		
-		return null;
+		/*
+		 * user + item , 재구매 여부 
+		 */
+		HashMap<String, Boolean> boughtPeople = new HashMap<String, Boolean>();
+		
+		/*
+		 * [0] = 재구매 (상품을 재구매한 고객 수)
+		 * [1] = 총구매 
+		 * [2] = 이 상품을 구매한 사용자 수 (상품을 한 번 이상 구매한 고객 수)
+		 */
+		HashMap<String, int[]> boughtRecords = new HashMap<String, int[]>();
+		ArrayList<String> answer = new ArrayList<String>();
+		
+		int dateConverted = convertDate(date);
+		
+		//기록을 가지고 구매자 및 물품 기준으로 정리하기 
+		for (int i = 0; i < records.length; i++) {
+			
+			String[] record = records[i].split(" ");
+			int recordDate = convertDate(record[0]);
+			
+			//해당 기간안에 있다 
+			if ((dateConverted - k) < recordDate && dateConverted >= recordDate) {
+				
+				//user 
+				String uid = record[1];
+				//item 
+				String pid = record[2];
+				//key 생성
+				String key = uid + "_" + pid;
+				//기간안에 구매 기록이 있으니 답에 추가
+				//소팅 순서는 나중에 확인 
+				if (!answer.contains(pid)) {
+					answer.add(pid);
+				}
+				
+				//해당 유저가 처음 물품을 구매시  
+				if (!boughtPeople.containsKey(key)) {
+					//구매했다고 기록해주고 
+					boughtPeople.put(key, false);
+					
+					int[] statistics;
+					//해당 구매 기록이 없을시
+					if (!boughtRecords.containsKey(pid)) {
+						statistics = new int[3];
+						statistics[0] = 0;
+						statistics[1] = 1;
+						statistics[2] = 1;
+					
+					//구매 기록이 있을시 
+					} else {
+						statistics = boughtRecords.get(pid);
+						statistics[1]++;
+						statistics[2]++;
+					}
+					
+					boughtRecords.put(pid, statistics);
+				}
+				//구매한 기록이 있으면 
+				else {
+					int[] statistics = boughtRecords.get(pid);
+					Boolean repurchased = boughtPeople.get(key);
+					
+					//재구매시 
+					if (!repurchased) {
+						statistics[0]++;
+						boughtPeople.put(key, true);
+					}
+					
+					statistics[1]++;
+					
+					boughtRecords.put(pid, statistics);
+				}
+			}
+		}
+		
+		//조건에 맞는 기록이 없으면 
+		if (answer.size() == 0) {
+			
+			String[] noResult = new String[1];
+			noResult[0] = "\"no result\"";
+			
+			return noResult;
+			
+		}
+		
+		//조건에 기록이 있을시 소팅 시작 
+		Collections.sort(answer, new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				// TODO Auto-generated method stub
+				int[] first_statistics = boughtRecords.get(o1);
+				int[] second_statistics = boughtRecords.get(o2);
+				
+				float first_percentage = (float) first_statistics[0] / first_statistics[2];
+				float second_percentage = (float) second_statistics[0] / second_statistics[2];
+				
+				//재구매율이 높은 제품을 우선순위 리턴
+				if (first_percentage > second_percentage) {
+					return -1;
+				} else if (first_percentage < second_percentage) {
+					return 1;
+				
+				//만약 구매율이 동일하다면
+				} else if (first_percentage == second_percentage){
+					
+					int first_total = first_statistics[1];
+					int second_total = second_statistics[1];
+					
+					//구매 건수가 높은 우선순위 리턴
+					if (first_total > second_total) {
+						return -1;
+					} else if (first_total < second_total) {
+						return 1;
+						
+					//구매 건수까지 똑같으면 id순위로 정렬 (사전순위 아님!)
+					} else if (first_total == second_total) {
+						
+						int first_id = Integer.parseInt(o1.substring(3, o1.length()));
+						int second_id = Integer.parseInt(o2.substring(3, o2.length()));
+						
+						return first_id - second_id;
+					}
+				}
+				
+				return 0;
+			}
+
+		});
+		
+		//리턴 해주기 위해 String[]으로 converting 
+		String[] answer_array = new String[answer.size()];
+		for (int i = 0; i < answer.size(); i++) {
+			answer_array[i] = "\"" + answer.get(i) + "\"";
+		}
+		
+		return answer_array;
 	}
 	
 	public int convertDate(String date) {
 		String[] dates = date.split("-");
+
 		int month = (Integer.parseInt(dates[1]) - 1) * 30;
 		int day = Integer.parseInt(dates[2]);
+		
 		int total = month + day;
 
 		return total;
