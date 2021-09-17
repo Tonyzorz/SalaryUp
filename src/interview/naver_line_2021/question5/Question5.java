@@ -120,11 +120,183 @@ mmoneyman	batman42@korea.co.kr
 		// TODO Auto-generated constructor stub
 	}
 	
-	public int solution(String[] nicks, String[] emails) {
-		int answer = 0;
+	public static ArrayList<ArrayList<Integer>> uniques = new ArrayList<>();
+	public static boolean[] isAdded;
+	
+	//유저네임이 유사한지 체크하는 메소드 
+	public static boolean isSameNickname(String firstNick, String secondNick) {
 		
-		return answer;
+		ArrayList<String> longerNick = new ArrayList<String>();
+		
+		boolean isFirst = true;
+		//긴 길이를 ArrayList에 한자리마다 담기 
+		if (firstNick.length() > secondNick.length()) {
+			
+			for (int i = 0; i < firstNick.length(); i++) {
+				longerNick.add(String.valueOf(firstNick.charAt(i)));
+			}
+			
+		} else {
+			isFirst = false;
+			
+			for (int i = 0; i < secondNick.length(); i++) {
+				longerNick.add(String.valueOf(secondNick.charAt(i)));
+			}
+			
+		}
+		
+		//짧은 nickname을 ArrayList에 하나식 제거 
+		if (isFirst) {
+			
+			for (int i = 0; i < secondNick.length(); i++) {
+				longerNick.remove(String.valueOf(secondNick.charAt(i)));
+			}
+			
+		} else {
+			
+			for (int i = 0; i < firstNick.length(); i++) {
+				longerNick.remove(String.valueOf(firstNick.charAt(i)));
+			}
+		}
+		
+		return longerNick.size() <= 2 ? true : false;
 	}
+	
+	//유사한 유저들을 uniques란 arraylist에 추가해주는 메소드
+	public static void addUniques(int firstIndex, int secondIndex) {
+		
+		boolean isContains = false;
+		
+		for (int i = 0; i < uniques.size(); i++) {
+			ArrayList<Integer> indexes = uniques.get(i);
+			
+			if (indexes.contains(firstIndex)) { 
+				uniques.get(i).add(secondIndex);
+				isContains = true;
+				break;
+				
+			} else if (indexes.contains(secondIndex)) {
+				uniques.get(i).add(firstIndex);
+				isContains = true;
+				break;
+			}
+			
+		}
+		
+		//만약 index 둘다 존재 하지 않으면 ArrayList안에 담아서 uniques에 넣어주기 
+		if (!isContains) {
+			ArrayList<Integer> indexes = new ArrayList<Integer>();
+			indexes.add(firstIndex);
+			indexes.add(secondIndex);
+			uniques.add(indexes);
+		} 
+	}
+	
+	//유저 이메일 유사한지 체크하는 메소드 
+	public static boolean isSameEmail(String firstEmail, String secondEmail) {
+		
+		String[] first = firstEmail.split("@");
+		String[] second = secondEmail.split("@");
+		
+		//이메일 앞부분이 동일하면 유사한 이메일 
+		if (first[0] == second[0]) {
+			return true;
+		}
+		
+		//이메일 앞부분 확인 
+		ArrayList<String> longerEmail = new ArrayList<String>();
+		
+		boolean isFirst = true;
+		//긴 길이를 ArrayList에 한자리마다 담기 
+		if (first[0].length() > second[0].length()) {
+			
+			for (int i = 0; i < first[0].length(); i++) {
+				longerEmail.add(String.valueOf(first[0].charAt(i)));
+			}
+			
+		} else {
+			isFirst = false;
+			
+			for (int i = 0; i < second[0].length(); i++) {
+				longerEmail.add(String.valueOf(second[0].charAt(i)));
+			}
+			
+		}
+		
+		//짧은 email을 ArrayList에 하나식 제거 
+		if (isFirst) {
+			
+			for (int i = 0; i < second[0].length(); i++) {
+				longerEmail.remove(String.valueOf(second[0].charAt(i)));
+			}
+			
+		} else {
+			
+			for (int i = 0; i < first[0].length(); i++) {
+				longerEmail.remove(String.valueOf(first[0].charAt(i)));
+			}
+		}
+		
+		//모든 문자를 삭제했는데 1가 남으며 서버도 같을시 유사한 이메일 
+		if (longerEmail.size() <= 1 && first[1] == second[1]) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	//유니크한 유저들 반환하는 메소드
+	public static int uniqueUsers() {
+		
+		int total = 0;
+		for (boolean added : isAdded) {
+			if (!added) total++;
+		}
+		
+		return total;
+	}
+	/*
+	 * 
+	 */
+	public int solution(String[] nicks, String[] emails) {
+		
+		isAdded = new boolean[nicks.length];
+		
+		//유저 닉네임 비교
+		for (int i = 0; i < nicks.length - 1; i++) {
+			String firstNick = nicks[i];
+			String firstEmail = emails[i];
+			for (int j = i + 1; j < nicks.length; j++) {
+				String secondNick = nicks[j];
+				String secondEmail = emails[j];
+				if (isSameNickname(firstNick, secondNick) && isSameEmail(firstEmail, secondEmail)) {
+					addUniques(i + 1, j + 1);
+					isAdded[i] = true;
+					isAdded[j] = true;
+				}
+			}
+		}
+		
+		//유저 이메일 비교 
+//		for (int i = 0; i < emails.length - 1; i++) {
+//			String firstEmail = emails[i];
+//			
+//			for (int j = i + 1; j < emails.length; j++) {
+//				String secondEmail = emails[j];
+//				
+//				if (isSameEmail(firstEmail, secondEmail)) {
+//					addUniques(i + 1, j + 1);
+//					isAdded[i] = true;
+//					isAdded[j] = true;
+//				}
+//			}
+//		}
+		
+		int total = uniques.size() + uniqueUsers();
+		return total;
+	}
+	
+	
 	
 	public static void main(String[] args) {
 		Question5 solution = new Question5();

@@ -97,6 +97,9 @@ jobs	result
 	public static int[] job;
 	public static int seconds;
 	
+	/*
+	 * 답에 작업중인 분류 추가하는 함수 
+	 */
 	public static void addAnswer() {
 		//안에 분류 데이터가 있으며 
 		if (!classifications.isEmpty()) {
@@ -110,6 +113,10 @@ jobs	result
 		}
 	}
 	
+	/*
+	 *대기 리스트에 작업 추가하는 함수  
+	 * 대기 리스트 추가 조건에 안맞으면 false 리턴 
+	 */
 	public static boolean addProcesses() {
 		
 		//만약 걸리는 시간이 
@@ -130,7 +137,10 @@ jobs	result
 		
 		return isAdded;
 	}
-	 
+	
+	/*
+	 * 대기 리스트안에 있는 작업 처리하는 함수
+	 */
 	public static void removeProcess() {
 		
 		int[] waiting_top = waiting.peekLast();
@@ -216,9 +226,9 @@ jobs	result
 		}
 	}
 	
+	//ArrayList 에서 int[]으로 변환 
 	public static int[] convert() {
 	
-		//ArrayList 에서 int[]으로 변환 
 		int[] answer = new int[classifications.size()];
 		for (int i = 0; i < classifications.size(); i++) {
 			answer[i] = classifications.get(i);
@@ -227,6 +237,15 @@ jobs	result
 		return answer;
 	}
 	
+	/*
+	 * 고려했던 점들
+	 * - 작업 목록 과 대기중인 작업 목록 두가지 
+	 * 		대기중인 작업은 맨위에 있는 작업을 봐야하기 때문에 덱 deque 사용해야함 
+	 * - 분류 똑같으면 연이어서 처리 
+	 * - 중요도는 번호 중첩 
+	 * - 중요도 똑같으면 낮은 분류 번호 처리 
+	 * 
+	 */
 	public int[] solution(int[][] jobs) {
 		
 		for (int[] job : jobs) {
