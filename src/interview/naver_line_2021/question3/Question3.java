@@ -13,13 +13,14 @@ public class Question3 {
 아래 표는 요청 시각을 기준으로 정렬한 작업 목록입니다. 이 문제에서 요청 시각이 같은 작업은 주어지지 않습니다.
 
 번호	요청 시각(초)	걸리는 시간(초)	분류 번호	중요도
-1번	1	5	2	3
-2번	2	2	3	2
-3번	3	1	3	3
-4번	5	2	1	5
-5번	7	1	1	1
-6번	9	1	1	1
-7번	10	2	2	9
+1번		1			5			2	3
+2번		2			2			3	2
+3번		3			1			3	3
+4번		5			2			1	5
+5번		7			1			1	1
+6번		9			1			1	1
+7번		10			2			2	9
+
 1초: 요청 시각이 가장 빠른 1번 작업(분류: 2)을 선택합니다. 처리에 걸리는 시간은 5초입니다.
 1초~6초: 1번 작업을 처리합니다. 그동안 2번, 3번, 4번 작업이 새로 요청되어 대기합니다.
 6초: 분류 3에 속한 2번, 3번 작업의 중요도 합은 5입니다. 분류 1에 속한 4번 작업의 중요도는 5입니다. 중요도가 같다면 분류 번호가 낮은 분류를 선택합니다. 따라서 분류 1의 작업을 선택합니다.
@@ -90,9 +91,181 @@ jobs	result
 		// TODO Auto-generated constructor stub
 	}
 	
+	public static ArrayList<Integer> classifications = new ArrayList<Integer>();
+	public static Queue<int[]> queue = new LinkedList<int[]>();
+	public static Deque<int[]> waiting = new LinkedList<int[]>();
+	public static int[] job;
+	public static int seconds;
+	
+	public static void addAnswer() {
+		//안에 분류 데이터가 있으며 
+		if (!classifications.isEmpty()) {
+			//맨 위에 있는 분류가 현재 작업중인 분류랑 다를시 추가해주기
+			if (classifications.get(classifications.size() - 1) != job[2]) {
+				classifications.add(job[2]);
+			}
+		//안에 데이터가 없을시 첫 분류 추가 
+		} else {
+			classifications.add(job[2]);
+		}
+	}
+	
+	public static boolean addProcesses() {
+		
+		//만약 걸리는 시간이 
+		boolean isAdded = false;
+		
+		//총 걸리는 시간들을 처리해야되는 queue에 담기 
+		while (!queue.isEmpty()) {
+			int[] next = queue.peek();
+			
+			if (next[0] <= seconds) {
+				isAdded = true;
+				waiting.add(next);
+				queue.poll();
+			} else {
+				break;
+			}
+		}
+		
+		return isAdded;
+	}
+	 
+	public static void removeProcess() {
+		
+		int[] waiting_top = waiting.peekLast();
+		
+		//만약 위에있는 작업이랑 현재 작업의 분류가 같을시 위에 있는거 진행 
+		if (waiting_top[2] == job[2]) {
+			job = waiting.pollLast();
+			seconds = job[0] + job[1];
+		//분류가 다를시 대기중인 작업들중에 분류별 중요도 순위 정하기
+		} else {
+			
+			int waiting_length = waiting.size();
+			
+			HashMap<Integer, Integer> importances = new HashMap<Integer, Integer>();
+			int max = 0;
+			
+			//중요도 기준으로 찾기 
+			for (int i = 0; i < waiting_length; i++) {
+				int[] waiting_job = waiting.poll();
+				int type = waiting_job[2];
+				int importance = waiting_job[3];
+				
+				//해당 작업 키가 존재하면, 해당 키에 중요도 ++
+				if (importances.containsKey(type)) {
+					
+					int total = importances.get(type) + importance;
+					importances.put(type, total);
+					
+					if (max < total) {
+						max = total;
+					}
+				//없을시 키 새로추가 
+				} else {
+					
+					importances.put(type, importance);
+					
+					if (max < importance) {
+						max = importance;
+					}
+				}
+				
+				waiting.add(waiting_job);
+			}
+			
+			int key = Integer.MAX_VALUE;
+			//제일 높은 중요도 값(max)을 가진 분류 번호 찾기(key)
+			for (Integer importances_key : importances.keySet()) {
+				int value = importances.get(importances_key);
+				//높은 중요도와 같으면 낮은 분류 번호를 먼저 처리
+				if (value == max) {
+					//낮은 분류 번호를 key에 저장
+					if (key > importances_key) {
+						key = importances_key;
+					}
+				}
+			}
+			
+			//다시 한번  waiting(대기)찾아서 처리, 이부분에 대해서 만약 동이란 중요도 분류 번호까지 똑같으면 오름차순, 내림차순에 따라서 for문의 위치 돌리기(문제에 제시되지 않음)
+			boolean isFound = false;
+			//지금 현재 최상위에 있는 작업이 같은 분류 + 중요도가 같으면 위에 있는거 작업하기 
+			if (waiting_top[2] == key && waiting_top[3] == max) {
+				
+				int[] waiting_job = waiting.pollLast();
+				job = waiting_job;
+				seconds = job[0] + job[1];
+				
+			} else {
+				
+				for (int i = 0; i < waiting_length; i++) {
+					int[] waiting_job = waiting.poll();
+					int type = waiting_job[2];
+					
+					if (!isFound && type == key) {
+						job = waiting_job;
+						seconds = job[0] + job[1];
+						isFound = true;
+					} else {
+						waiting.add(waiting_job);
+					}
+					
+				}
+			}
+		}
+	}
+	
+	public static int[] convert() {
+	
+		//ArrayList 에서 int[]으로 변환 
+		int[] answer = new int[classifications.size()];
+		for (int i = 0; i < classifications.size(); i++) {
+			answer[i] = classifications.get(i);
+		}
+		
+		return answer;
+	}
+	
 	public int[] solution(int[][] jobs) {
 		
-		return null;
+		for (int[] job : jobs) {
+			queue.add(job);
+		}
+		
+		job = queue.poll();
+		seconds = job[0] + job[1];
+		addAnswer();
+		
+		//작업리스트를 대기 작업 리스트에 옮기면서 처리하는 while문
+		while (!queue.isEmpty()) {
+			//작업을 처리하면서 걸리는 시간안에 해당하는 작업들은 waiting이란 deque에 추가하는 함수 
+			boolean isAdded = addProcesses();
+			
+			//만약 추가한 작업이 없으면 걸리는 시간을 다음 작업의 요청 시간(초)로 변경
+			if (!isAdded) {
+				int[] next = queue.peek();
+				seconds = next[0];
+				continue;
+			}
+			
+			//작업들 처리하기 
+			removeProcess();
+			
+			//작업하는 분류 작업들 기록하는 함수 
+			addAnswer();
+		}
+		
+		//대기 작업 리스트에 작업들이 남으면 처리하는 while문
+		while(!waiting.isEmpty()) {
+			removeProcess();
+			addAnswer();
+		}
+		
+		//ArrayList 에서 int[]으로 변환 
+		int[] answer = convert();
+		
+		return answer;
 	}
 	
 	public static void main(String[] args) {
@@ -101,6 +274,6 @@ jobs	result
 		//int[][] jobs = {{1, 2, 1, 5}, {2, 1, 2, 100}, {3, 2, 1, 5}, {5, 2, 1, 5}}	;
 		//int[][] jobs = {{0, 2, 3, 1}, {5, 3, 3, 1}, {10, 2, 4, 1}};
 		//int[][] jobs = {{0, 5, 1, 1}, {2, 4, 3, 3}, {3, 4, 4, 5}, {5, 2, 3, 2}};
-		
+		System.out.println(Arrays.toString(solution.solution(jobs)));
 	}
 }
