@@ -124,7 +124,7 @@ mmoneyman	batman42@korea.co.kr
 	public static boolean[] isAdded;
 	
 	//유저네임이 유사한지 체크하는 메소드 
-	public static boolean isSameNickname(String firstNick, String secondNick) {
+	public static boolean isSameNickname_failed(String firstNick, String secondNick) {
 		
 		ArrayList<String> longerNick = new ArrayList<String>();
 		
@@ -145,21 +145,62 @@ mmoneyman	batman42@korea.co.kr
 			
 		}
 		
+		String firstTemp = firstNick;
+		String secondTemp = secondNick;
 		//짧은 nickname을 ArrayList에 하나식 제거 
 		if (isFirst) {
 			
 			for (int i = 0; i < secondNick.length(); i++) {
 				longerNick.remove(String.valueOf(secondNick.charAt(i)));
+				firstTemp = firstTemp.replace(String.valueOf(secondNick.charAt(i)), "");
 			}
 			
 		} else {
 			
 			for (int i = 0; i < firstNick.length(); i++) {
 				longerNick.remove(String.valueOf(firstNick.charAt(i)));
+				secondTemp = secondTemp.replace(String.valueOf(secondNick.charAt(i)), "");
+
 			}
 		}
 		
-		return longerNick.size() <= 2 ? true : false;
+		int total = 0;
+		if (isFirst) {
+			total = firstTemp.length() + longerNick.size();
+		} else {
+			total = secondTemp.length() + longerNick.size();
+		}
+		
+		return total <= 2 ? true : false;
+	}
+	
+	public static ArrayList<String> convertToArrayList(String str) {
+		
+		ArrayList<String> converted = new ArrayList<String>();
+		
+		for (int i = 0; i < str.length(); i++) {
+			converted.add(String.valueOf(str.charAt(i)));
+		}
+		
+		return converted;
+	}
+	
+	public static boolean isSameNickname(String firstNick, String secondNick) {
+		
+		ArrayList<String> firstTemp = convertToArrayList(firstNick);
+		ArrayList<String> secondTemp = convertToArrayList(secondNick);
+		
+		for (int i = 0; i < secondNick.length(); i++) {
+			firstTemp.remove(String.valueOf(secondNick.charAt(i)));
+		}
+		
+		for (int i = 0; i < firstNick.length(); i++) {
+			secondTemp.remove(String.valueOf(firstNick.charAt(i)));
+		}
+		
+		int total = firstTemp.size() + secondTemp.size();
+		
+		return total <= 2 ? true : false;
 	}
 	
 	//유사한 유저들을 uniques란 arraylist에 추가해주는 메소드
@@ -199,7 +240,38 @@ mmoneyman	batman42@korea.co.kr
 		String[] second = secondEmail.split("@");
 		
 		//이메일 앞부분이 동일하면 유사한 이메일 
-		if (first[0] == second[0]) {
+		if (first[0].equals(second[0])) {
+			return true;
+		}
+		
+		//이메일 앞부분 확인 
+		ArrayList<String> firstTemp = convertToArrayList(firstEmail);
+		ArrayList<String> secondTemp = convertToArrayList(secondEmail);
+		
+		for (int i = 0; i < secondEmail.length(); i++) {
+			firstTemp.remove(String.valueOf(secondEmail.charAt(i)));
+		}
+		
+		for (int i = 0; i < firstEmail.length(); i++) {
+			secondTemp.remove(String.valueOf(firstEmail.charAt(i)));
+		}
+		
+		int total = firstTemp.size() + secondTemp.size();
+		//모든 문자를 삭제했는데 1가 남으며 서버도 같을시 유사한 이메일 
+		if (total <= 1 && first[1].equals(second[1])) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public static boolean isSameEmail_failed(String firstEmail, String secondEmail) {
+		
+		String[] first = firstEmail.split("@");
+		String[] second = secondEmail.split("@");
+		
+		//이메일 앞부분이 동일하면 유사한 이메일 
+		if (first[0].equals(second[0])) {
 			return true;
 		}
 		
@@ -238,7 +310,7 @@ mmoneyman	batman42@korea.co.kr
 		}
 		
 		//모든 문자를 삭제했는데 1가 남으며 서버도 같을시 유사한 이메일 
-		if (longerEmail.size() <= 1 && first[1] == second[1]) {
+		if (longerEmail.size() <= 1 && first[1].equals(second[1])) {
 			return true;
 		}
 		
@@ -269,6 +341,7 @@ mmoneyman	batman42@korea.co.kr
 			for (int j = i + 1; j < nicks.length; j++) {
 				String secondNick = nicks[j];
 				String secondEmail = emails[j];
+				
 				if (isSameNickname(firstNick, secondNick) && isSameEmail(firstEmail, secondEmail)) {
 					addUniques(i + 1, j + 1);
 					isAdded[i] = true;
@@ -291,7 +364,8 @@ mmoneyman	batman42@korea.co.kr
 //				}
 //			}
 //		}
-		
+		System.out.println(uniques);
+		System.out.println(uniques.size());
 		int total = uniques.size() + uniqueUsers();
 		return total;
 	}
@@ -302,7 +376,7 @@ mmoneyman	batman42@korea.co.kr
 		Question5 solution = new Question5();
 		String[] nicks = {"imhero111", "moneyman", "hero111", "imher1111", "hro111", "mmoneyman", "moneymannnn"};
 		String[] emails = {"superman5@abcd.com", "batman432@korea.co.kr", "superman@abcd.com", "supertman5@abcd.com", "superman@erty.net", "batman42@korea.co.kr", "batman432@usa.com"};
-		
+
 //		String[] nicks = {"99police", "99poli44"}	;
 //		String[] emails = {"687ufq687@aaa.xx.yyy", "87ufq687@aaa.xx.yyy"};
 		
