@@ -74,14 +74,110 @@ id_list	report	k	result
 		// TODO Auto-generated constructor stub
 	}
 	
+	public static HashMap<String, Integer> reportedCount = new HashMap<String, Integer>();
+	public static HashMap<String, ArrayList<String>> reportedUser = new HashMap<String, ArrayList<String>>();
+	public static HashMap<String, Integer> userIndex = new HashMap<String, Integer>();
+	
+	//유저들 인덱스 기록하는 함수 
+	public static void addUserIndex(String[] id_list) {
+		
+		for (int i = 0; i < id_list.length; i++) {
+        	userIndex.put(id_list[i], i);
+        }
+		
+	}
+	
+	//신고된 유저들을 기록하는 함수 
+	public static void checkReport(String[] report) {
+		
+		for (int i = 0; i < report.length; i++) {
+			
+			String[] names = report[i].split(" ");
+			String reporter = names[0];
+			String reported = names[1];
+			
+			ArrayList<String> reporterList;
+			//만약 신고된 유저의 기록이 없을시 
+			if (!reportedUser.containsKey(reported)) {
+				reporterList = new ArrayList<String>();
+				
+			//신고된 유저의 기록이 있을시 
+			} else {
+				reporterList = reportedUser.get(reported);
+			}
+			
+			
+			
+			//기존 신고 기록이 없으면 신고 카운트 증가 및 신고 기록에 이름 추가 
+			if (!reporterList.contains(reporter)) {
+				//신고 기록에 추가해주고 
+				reporterList.add(reporter);
+				
+				//신고당한 유저 횟수 증가하기
+				//신고당한 유저가 없으면 새로 추가해주기 
+				if (!reportedCount.containsKey(reported)) {
+					reportedCount.put(reported, 1);
+				//신고당한 유저가 있을시 기존 카운트 증가 
+				} else {
+					int total = reportedCount.get(reported) + 1;
+					reportedCount.put(reported, total);
+				}
+			} 
+			
+			//다 끝났을시 신고유저 기록 최신화 
+			reportedUser.put(reported, reporterList);
+
+		}
+		
+	}
+	
+	//보내야하는 이메일 건수 유저당 업데이트 해주는 함수 
+	public static void updateEmailList(int[] answer, int k) {
+		
+		for (String reportedName : reportedCount.keySet()) {
+			int count = reportedCount.get(reportedName);
+			
+			//만약 신고 권수가 k보다 같거나 클시 이메일 보내기 
+			if (count >= k) {
+				
+				//해당 유저를 신고한 유저리스트 
+				ArrayList<String> reporterList = reportedUser.get(reportedName);
+				
+				//신고한 유저들한테 이메일 권수 증가하기 
+				for (String reporterName : reporterList) {
+					int index = userIndex.get(reporterName);
+					answer[index]++;
+				}
+			}
+		}
+	}
 	
     public int[] solution(String[] id_list, String[] report, int k) {
-        int[] answer = {};
+        int[] answer = new int[id_list.length];
+        
+        //유저들 인덱스 기록
+        addUserIndex(id_list);
+        
+        //유저 리포트 기록하기 
+        checkReport(report);
+        
+        //정리된 리포트 기록 기준으로 받아야하는 이메일 건수 최신화 해주기 
+        updateEmailList(answer, k);
+        
         return answer;
     }
     
 	public static void main(String[] args) {
 		Question1 solution = new Question1();
+		
+//		String[] id_list = {"muzi", "frodo", "apeach", "neo"};
+//		String[] report = {"muzi frodo","apeach frodo","frodo neo","muzi neo","apeach muzi"};
+//		int k = 2;
 
+		String[] id_list = {"con", "ryan"};
+		String[] report = {"ryan con", "ryan con", "ryan con", "ryan con"};
+		int k = 3;
+		
+		System.out.println(Arrays.toString(solution.solution(id_list, report, k)));
 	}
 }

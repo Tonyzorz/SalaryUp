@@ -126,14 +126,113 @@ fees	records	result
 		// TODO Auto-generated constructor stub
 	}
 	
+	public static TreeMap<String, Integer> parkingFees = new TreeMap<String, Integer>();
+	public static HashMap<String, Integer> parkingLot = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> parkedTime = new HashMap<String, Integer>();
 	
+	public static int convertTime(String time) {
+		String[] temp = time.split(":");
+		int hour = Integer.valueOf(temp[0]);
+		int minute = Integer.valueOf(temp[1]);
+		
+		int total = (hour * 60) + minute;
+		return total;
+	}
+	
+	public static int calculateFee(int[] fees, int time) {
+		
+		//총 주차 시간이 기본 시간안에 들어오면 기본요금만 청구 
+		if (time <= fees[0]) {
+			return fees[1];
+		}
+		
+		int fee = (int) (fees[1] + Math.ceil(((float)(time - fees[0]) / fees[2])) * fees[3]);
+		return fee;
+	}
+	
+	//일괄로 청사하기 위해 하루 주차시간 차량벌 기록하는 함수 
+	public static void updateTime(String carNum, int inTime, int outTime) {
+		
+		int timeDiff = outTime - inTime;
+		
+		if (parkedTime.containsKey(carNum)) {
+			
+			int total = parkedTime.get(carNum) + timeDiff;
+			parkedTime.put(carNum, total);
+			
+		} else {
+			parkedTime.put(carNum, timeDiff);
+		}
+	}
+	
+	public static int[] convertAnswer() {
+		
+		int[] answer = new int[parkingFees.size()];
+		
+		int index = 0;
+		for (String car : parkingFees.keySet()) {
+			answer[index] = parkingFees.get(car);
+			index++;
+		}
+		
+		return answer;
+	}
     public int[] solution(int[] fees, String[] records) {
-        int[] answer = {};
+        
+        //주차된 기록 확인하기 
+        for (int i = 0; i < records.length; i++) {
+        	String[] record = records[i].split(" ");
+        	int time = convertTime(record[0]);
+        	String carNum = record[1];
+        	
+        	//자동차 번호가 있으면 출차한다는 뜻 
+        	if (parkingLot.containsKey(carNum)) {
+        		
+        		int inTime = parkingLot.get(carNum);
+        		
+        		//주차시간 기록하기 
+        		updateTime(carNum, inTime, time);
+        		
+        		//출차했으니 기록에서 지워주기 
+        		parkingLot.remove(carNum);
+        	//자동차 번호가 없으면 입차 
+        	} else {
+        		parkingLot.put(carNum, time);
+        	}
+        }
+        
+        //만약 주차장에 남은 차가 있으면 23:59로 나갔다고 주차시간 최신화해주기 
+        int outTime = convertTime("23:59");
+        for (String notOutCar : parkingLot.keySet()) {
+        	int inTime = parkingLot.get(notOutCar);
+        	updateTime(notOutCar, inTime, outTime);
+        }
+        
+        //차량별 일괄 누적 시간으로 주차요금 기록하기 
+        for (String car : parkedTime.keySet()) {
+        	int totalTime = parkedTime.get(car);
+        	int fee = calculateFee(fees, totalTime);
+        	parkingFees.put(car, fee);
+        }
+        
+        int[] answer = convertAnswer();
+        
         return answer;
     }
     
 	public static void main(String[] args) {
 		Question3 solution = new Question3();
 
+		int[] fees = {180, 5000, 10, 600};
+		String[] records = {"05:34 5961 IN", "06:00 0000 IN", "06:34 0000 OUT", "07:59 5961 OUT", "07:59 0148 IN", "18:59 0000 IN", "19:09 0148 OUT", "22:59 5961 IN", "23:00 5961 OUT"};
+		
+//		int[] fees = {120, 0, 60, 591};
+//		String[] records = {"16:00 3961 IN","16:00 0202 IN","18:00 3961 OUT","18:00 0202 OUT","23:58 3961 IN"}	;
+		
+//		int[] fees = {1, 461, 1, 10};
+//		String[] records = {"00:00 1234 IN"};
+		
+		
+		System.out.println(Arrays.toString(solution.solution(fees, records)));
 	}
 }
